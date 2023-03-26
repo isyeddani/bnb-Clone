@@ -4,8 +4,12 @@ import bar3 from './bar-3.png';
 import user from './userLogo.png'; 
 import './App.css';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../UserContext.js';
+import { useState } from 'react';
 
 export default function Header(){
+
+  const {user} = useContext(UserContext)
 return (
     <div>
       <header className="flex gap-1 justify-between">

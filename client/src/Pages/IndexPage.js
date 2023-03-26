@@ -3,7 +3,7 @@
 export default function IndexPage(){
 return (
   <div>
-    Index Page contenct Header
+    Index Page content Header
   </div>
 );
 }
