@@ -1,37 +1,39 @@
 import logo from './airbnb-logo.png';
 import serachlogo from './Search-icon.png';
-import bar3 from './bar-3.png'; 
-import user from './userLogo.png'; 
+import bar3 from './bar-3.png';
+import userimg from './userLogo.png';
 import './App.css';
+import { useContext } from 'react';
+import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../UserContext.js';
-import { useState } from 'react';
 
-export default function Header(){
-
-  const {user} = useContext(UserContext)
-return (
+export default function Header() {
+  const { user } = useContext(UserContext);
+  return (
     <div>
       <header className="flex gap-1 justify-between">
-        <div className="flex">  
+        <div className="flex">
           <img src={logo} className="w-20"></img>
         </div>
-        <div className="flex gap-2 border border-grey-300 rounded-full p-4 self-center shadow-md shadow-grey-300">
-          <div>Anywhere</div>
-          <div className="border-l border-grey-300"></div>
-          <div>Anyweek</div>
-          <div className="border-l border-grey-300"></div>
-          <div>Add guests</div>
-          <button className="bg-primary p-2 rounded-full">
-            <img src={serachlogo} className="w-5"></img>
+        <div className="items-center h-12 px-3 flex flex-row border border-grey-300 rounded-full shadow-md shadow-grey-300">
+          <div className="grid p-2">Anywhere</div>
+          <div className="rounded-full bg-gray-200 h-8 p-0.5"></div>
+          <div className="grid p-2">Anyweek</div>
+          <div className="rounded-full bg-gray-200 h-8 p-0.5"></div>
+          <div className="grid p-2">Add guests</div>
+          <button className="items-center bg-primary rounded-full w-7 h-7">
+            <img src={serachlogo} className="mx-auto"></img>
           </button>
         </div>
-        <Link to={'/login'} className='flex gap-2 border border-grey-300 rounded-full p-4 self-center'>
-        <img src={bar3} className="w-5"></img>
-        <img src={user} className="w-6 rounded-full"></img>
+        <Link
+          to={'/login'}
+          className="flex h-12 gap-2 border border-grey-500 rounded-full p-3 self-center"
+        >
+          <img src={bar3} className="mx-auto "></img>
+          <img src={userimg} className="mx-auto"></img>
+          {!!user && <div>{user.name}</div>}
         </Link>
       </header>
     </div>
-);
+  );
 }
-

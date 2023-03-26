@@ -2,15 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const token = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 require('dotenv').config();
 const app = express();
+const cookieParser = require('cookie-parser');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 tokenSecret = 'fsdafhasdjkfsdfasdkjfkla';
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // console.log(process.env.MONGO_URL);
@@ -41,15 +43,15 @@ app.post('/login', async (req, res) => {
   if (userDoc) {
     const passCheck = bcrypt.compareSync(password, userDoc.password);
     if (passCheck) {
-        token.sign(
-          { email: userDoc.email, id: userDoc._id },
-          tokenSecret,
-          {},
-          (err, token) => {
-            if (err) throw err;
-            res.cookie('token', token).json(userDoc);
-          }
-        );
+      jwt.sign(
+        { email: userDoc.email, id: userDoc._id, name: userDoc.name },
+        tokenSecret,
+        {},
+        (err, token) => {
+          if (err) throw err;
+          res.cookie('token', token).json(userDoc);
+        }
+      );
     } else {
       res.status(422).json('Pasword not Ok');
     }
@@ -58,6 +60,17 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.listen(4000);
+app.get('/profile',(req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, tokenSecret, {}, async (err, user) => {
+      if (err) throw err;
+      const {name,email,_id} = await User.findById(user.id)
+      res.json({name,email,_id});
+    });
+  } else {
+    res.json({});
+  }
+});
 
-// XLPWZSZkFDqmz6lR
+app.listen(4000);
