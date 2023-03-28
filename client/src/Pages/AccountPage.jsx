@@ -5,13 +5,14 @@ import axios from 'axios';
 
 export default function AccountPage() {
   const { ready, user,setUser } = useContext(UserContext);
-  const [redirect, setRedirect] = useState(null);
+  let [redirect, setRedirect] = useState(null);
   let { subpage } = useParams();
 
   if (subpage === undefined) {
     subpage = 'profile';
   }
 
+  
   async function Logout() {
     await axios.post('/logout');
     setRedirect('/');
