@@ -3,16 +3,21 @@ import serachlogo from './Search-icon.png';
 import bar3 from './bar-3.png';
 import userimg from './userLogo.png';
 import './App.css';
-import { useContext, useState } from 'react';
+import { useState, useContext  } from 'react';
 import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
 
 export default function Header() {
+  // let [redirect, setRedirect] = useState('/login');
   const { user } = useContext(UserContext);
-  let [redirect, setRedirect] = useState(null);
-  user ? setRedirect('/account') : setRedirect('/login');
-  console.log("redirect",redirect);
-    
+    // if(user){
+    //   setRedirect('./account')
+    // }
+    // user ? setRedirect('/account') : setRedirect('/login');
+    // return redirect;
+  // }
+  // console.log('redirect', redirect);
+
   return (
     <div>
       <header className="flex gap-1 justify-between">
@@ -30,7 +35,7 @@ export default function Header() {
           </button>
         </div>
         <Link
-          to={redirect}
+          to={user ? '/account':'/login'}
           className="flex h-12 gap-2 border border-grey-500 rounded-full p-3 self-center"
         >
           <img src={bar3} className="mx-auto "></img>
