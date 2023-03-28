@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import './IndexPage.css';
 import { useContext, useState } from 'react';
-import { UserContext } from '../UserContext.js';
+import { UserContext } from '../UserContext.jsx';
 import axios from 'axios';
 
 export default function LoginPage() {

@@ -9,12 +9,13 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   const { user } = useContext(UserContext);
+  console.log("user:",{user})
   return (
     <div>
       <header className="flex gap-1 justify-between">
-        <div className="flex">
+        <Link to={'/'} className="flex">
           <img src={logo} className="w-20"></img>
-        </div>
+        </Link>
         <div className="items-center h-12 px-3 flex flex-row border border-grey-300 rounded-full shadow-md shadow-grey-300">
           <div className="grid p-2">Anywhere</div>
           <div className="rounded-full bg-gray-200 h-8 p-0.5"></div>
@@ -26,7 +27,7 @@ export default function Header() {
           </button>
         </div>
         <Link
-          to={'/login'}
+          to={user ? '/account' : '/login'}
           className="flex h-12 gap-2 border border-grey-500 rounded-full p-3 self-center"
         >
           <img src={bar3} className="mx-auto "></img>
