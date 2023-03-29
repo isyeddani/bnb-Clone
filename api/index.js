@@ -7,12 +7,14 @@ const User = require('./models/User');
 require('dotenv').config();
 const app = express();
 const cookieParser = require('cookie-parser');
+const imageDownloader = require('image-downloader');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 tokenSecret = 'fsdafhasdjkfsdfasdkjfkla';
 
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // console.log(process.env.MONGO_URL);
@@ -73,8 +75,18 @@ app.get('/profile', (req, res) => {
   }
 });
 
-app.post('/logout', (req, res)=>{
+app.post('/logout', (req, res) => {
   res.cookie('token', '').json(true);
-})
+});
 
 app.listen(4000);
+
+app.post('/upload-by-link', async (req, res) => {
+  const { Link } = req.body;
+  const newName = 'photo' + Date.now() + '.jpg';
+  await imageDownloader.image({
+    url: Link,
+    dest: __dirname + '/uploads/' + newName,
+  });
+  res.json(newName);
+});
