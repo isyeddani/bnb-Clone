@@ -92,11 +92,14 @@ export default function PlacesPage() {
             {addedPhotos.length > 0 &&
               addedPhotos.map((link) => (
                 <div>
-                  <img className='rounded-2xl' src={'http://localhost:4000/uploads/'+link} />
+                  <img
+                    className="rounded-2xl"
+                    src={'http://localhost:4000/uploads/' + link}/>
+                    
                 </div>
               ))}
             <label className="flex items-center p-8 text-2xl text-gray-600 text-center border bg-transparent rounded-2xl cursor-pointer">
-              <input type='file' className='hidden'/>
+              <input type="file" className="hidden" onChange={UploadPhoto} />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
