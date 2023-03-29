@@ -22,7 +22,6 @@ export default function AccountPage() {
   }
 
   if (ready && !user && !redirect) {
-    
     return <Navigate to={'/login'}></Navigate>;
   }
 
