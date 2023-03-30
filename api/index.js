@@ -81,31 +81,33 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json(true);
 });
 
-app.listen(4000);
-
+// Upload by Link
 app.post('/upload-by-link', async (req, res) => {
   const { Link } = req.body;
+  console.log('Link', Link);
   const newName = 'photo' + Date.now() + '.jpg';
   await imageDownloader.image({
     url: Link,
     dest: __dirname + '/uploads/' + newName,
   });
+  console.log('New Name', newName);
   res.json(newName);
 });
 
-
-const photosMiddleware = multer({ dest: 'uploads/' })
+// Upload by file
+const photosMiddleware = multer({ dest: 'uploads/' });
 app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
   const uploadedFiles = [];
   for (let i = 0; i < req.files.length; i++) {
-    const { path, originalname } = req.files[i];  // Destructure the path & originalname from the files
+    const { path, originalname } = req.files[i]; // Destructure the path & originalname from the files
     const parts = originalname.split('.');
-    console.log(parts)
-    const ext = parts[parts.length - 1]; // 
+    console.log(parts);
+    const ext = parts[parts.length - 1]; //
     const newPath = path + '.' + ext;
     fs.renameSync(path, newPath);
-    uploadedFiles.push(newPath.replace('uploads\\' , ""));
+    uploadedFiles.push(newPath.replace('uploads\\', ''));
   }
   res.json(uploadedFiles);
-})
-  
+});
+
+app.listen(4000);
