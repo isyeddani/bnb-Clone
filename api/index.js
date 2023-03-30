@@ -8,6 +8,8 @@ require('dotenv').config();
 const app = express();
 const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
+const multer = require('multer');
+const fs = require('fs'); //Files system library
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 tokenSecret = 'fsdafhasdjkfsdfasdkjfkla';
@@ -90,3 +92,20 @@ app.post('/upload-by-link', async (req, res) => {
   });
   res.json(newName);
 });
+
+
+const photosMiddleware = multer({ dest: 'uploads/' })
+app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
+  const uploadedFiles = [];
+  for (let i = 0; i < req.files.length; i++) {
+    const { path, originalname } = req.files[i];  // Destructure the path & originalname from the files
+    const parts = originalname.split('.');
+    console.log(parts)
+    const ext = parts[parts.length - 1]; // 
+    const newPath = path + '.' + ext;
+    fs.renameSync(path, newPath);
+    uploadedFiles.push(newPath.replace('uploads\\' , ""));
+  }
+  res.json(uploadedFiles);
+})
+  
