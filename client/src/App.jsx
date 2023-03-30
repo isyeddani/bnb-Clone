@@ -27,6 +27,3 @@ function App() {
   );
 }
 export default App;
-
-/*{ <Route path='/account/bookings' element={<AccountPage />} />
-<Route path='/account/places' element={<AccountPage />} /> }*/
