@@ -7,6 +7,7 @@ export default function PhotosUploader({ addedPhotos, onChange }) {
   // Add Photo By Link
   async function addPhotosByLink(ev) {
     ev.preventDefault();
+    // console.log('Link: ', photoLink);
     const { data: filename } = await axios.post('/upload-by-link', {
       Link: photoLink,
     });

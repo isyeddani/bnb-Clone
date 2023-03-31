@@ -4,13 +4,14 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
-require('dotenv').config();
-const app = express();
+const Place = require('./models/Place');
 const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs'); //Files system library
+require('dotenv').config();
 
+const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 tokenSecret = 'fsdafhasdjkfsdfasdkjfkla';
 
@@ -81,10 +82,12 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json(true);
 });
 
+/////////////////
 // Upload by Link
 app.post('/upload-by-link', async (req, res) => {
   const { Link } = req.body;
   const newName = 'photo' + Date.now() + '.jpg';
+  console.log('Destination: ', __dirname + '/uploads/' + newName);
   await imageDownloader.image({
     url: Link,
     dest: __dirname + '/uploads/' + newName,
@@ -92,6 +95,7 @@ app.post('/upload-by-link', async (req, res) => {
   res.json(newName);
 });
 
+///////////////////
 // Upload by file
 const photosMiddleware = multer({ dest: 'uploads/' });
 app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
@@ -106,6 +110,42 @@ app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
     uploadedFiles.push(newPath.replace('uploads\\', ''));
   }
   res.json(uploadedFiles);
+});
+
+// API for Uploading New Place Data
+app.post('/places', (req, res) => {
+  const { token } = req.cookies;
+  const data = ({
+    title,
+    address,
+    addedPhotos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body);
+  jwt.verify(token, tokenSecret, {}, async (err, user) => {
+    if (err) throw err;
+    try {
+      const placeData = await Place.create({
+        owner: user.id,
+        title,
+        address,
+        photos: addedPhotos,
+        description,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuests,
+      });
+      res.json(placeData);
+    } catch (err) {
+      res.status(422).json(err);
+    }
+  });
 });
 
 app.listen(4000);
