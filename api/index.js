@@ -84,13 +84,11 @@ app.post('/logout', (req, res) => {
 // Upload by Link
 app.post('/upload-by-link', async (req, res) => {
   const { Link } = req.body;
-  console.log('Link', Link);
   const newName = 'photo' + Date.now() + '.jpg';
   await imageDownloader.image({
     url: Link,
     dest: __dirname + '/uploads/' + newName,
   });
-  console.log('New Name', newName);
   res.json(newName);
 });
 
