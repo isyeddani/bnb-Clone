@@ -6,8 +6,9 @@ import axios from 'axios';
 
 export default function PlacesPage() {
   const [places, setPlaces] = useState([]);
+  
   useEffect(() => {
-    axios.get('/places').then(({ data }) => {
+    axios.get('/user-places').then(({ data }) => {
       setPlaces(data);
     });
   }, []);
@@ -31,7 +32,11 @@ export default function PlacesPage() {
               <div className="flex bg-gray-100 p-4 rounded-2xl gap-4">
                 <div className="flex w-32 h-32 bg-gray-300 rounded-2xl">
                   {places.photos.length > 0 && (
-                    <img className="object-cover rounded-xl"  src={"http://localhost:4000/uploads/"+places.photos[0]} alt="Photo Not Found" />
+                    <img
+                      className="object-cover rounded-xl"
+                      src={'http://localhost:4000/uploads/' + places.photos[0]}
+                      alt="Photo Not Found"
+                    />
                   )}
                 </div>
                 <div className="grow-0 shrink">

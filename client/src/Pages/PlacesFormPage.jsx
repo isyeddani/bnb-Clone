@@ -17,7 +17,9 @@ export default function PlaceFormPage() {
   const [checkOut, setCheckOut] = useState('');
   const [maxGuests, setMaxGuests] = useState(1);
   const [redirect, setRedirect] = useState(false);
+  const [price, setPrice] = useState(100);
 
+  // useEffect will execute when ever the id update in this page [id].
   useEffect(() => {
     if (!id) {
       return;
@@ -32,8 +34,10 @@ export default function PlaceFormPage() {
       setCheckIn(data.checkIn);
       setCheckOut(data.checkOut);
       setMaxGuests(data.maxGuests);
+      setPrice(data.price);
     });
   }, [id]);
+
   function InputHeader(text) {
     return <h2 className="text-xl mt-4">{text}</h2>;
   }
@@ -61,10 +65,10 @@ export default function PlaceFormPage() {
       checkIn,
       checkOut,
       maxGuests,
+      price,
     };
     // If Id is present then Updating
     if (id) {
-      
       await axios.put('/places', {
         id,
         ...PlaceData,
@@ -124,7 +128,7 @@ export default function PlaceFormPage() {
           'Check in&out times, Max guests',
           'Add check in and out times, remember to have some time window for cleaning the room between guests'
         )}
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-2 grid-cols-2 m:grid-cols-4">
           <div>
             <h3 className="mt-2 -mb-1">Check in time</h3>
             <input
@@ -149,6 +153,14 @@ export default function PlaceFormPage() {
               type="text"
               value={maxGuests}
               onChange={(ev) => setMaxGuests(ev.target.value)}
+            ></input>
+          </div>
+          <div>
+            <h3 className="mt-2 -mb-1">Price Per Night</h3>
+            <input
+              type="text"
+              value={price}
+              onChange={(ev) => setPrice(ev.target.value)}
             ></input>
           </div>
         </div>

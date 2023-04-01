@@ -103,7 +103,6 @@ app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
   for (let i = 0; i < req.files.length; i++) {
     const { path, originalname } = req.files[i]; // Destructure the path & originalname from the files
     const parts = originalname.split('.');
-    console.log(parts);
     const ext = parts[parts.length - 1]; //
     const newPath = path + '.' + ext;
     fs.renameSync(path, newPath);
@@ -125,6 +124,7 @@ app.post('/places', (req, res) => {
     checkIn,
     checkOut,
     maxGuests,
+    price,
   } = req.body;
   jwt.verify(token, tokenSecret, {}, async (err, user) => {
     if (err) throw err;
@@ -140,6 +140,7 @@ app.post('/places', (req, res) => {
         checkIn,
         checkOut,
         maxGuests,
+        price,
       });
       res.json(placeData);
     } catch (err) {
@@ -149,7 +150,7 @@ app.post('/places', (req, res) => {
 });
 
 //Sending the Place Data From Database to UI , on Get'/places' Call
-app.get('/places', (req, res) => {
+app.get('/user-places', (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, tokenSecret, {}, async (err, user) => {
     const { id } = user;
@@ -178,6 +179,7 @@ app.put('/places', async (req, res) => {
     checkIn,
     checkOut,
     maxGuests,
+    price,
   } = req.body;
   jwt.verify(token, tokenSecret, {}, async (err, user) => {
     if (err) throw err;
@@ -193,11 +195,16 @@ app.put('/places', async (req, res) => {
         checkIn,
         checkOut,
         maxGuests,
+        price,
       });
       placeDoc.save();
       res.json('OK');
     }
   });
 });
+
+app.get('/places', async (req, res)=>{
+  res.json(await Place.find())
+})
 
 app.listen(4000);
