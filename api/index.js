@@ -180,13 +180,13 @@ app.put('/places', async (req, res) => {
     maxGuests,
   } = req.body;
   jwt.verify(token, tokenSecret, {}, async (err, user) => {
-    if(err) throw err;
+    if (err) throw err;
     const placeDoc = await Place.findById(id);
     if (user.id === placeDoc.owner.toString()) {
       placeDoc.set({
         title,
         address,
-        addedPhotos,
+        photos: addedPhotos,
         description,
         perks,
         extraInfo,
