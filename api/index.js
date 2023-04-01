@@ -87,7 +87,7 @@ app.post('/logout', (req, res) => {
 app.post('/upload-by-link', async (req, res) => {
   const { Link } = req.body;
   const newName = 'photo' + Date.now() + '.jpg';
-  console.log('Destination: ', __dirname + '/uploads/' + newName);
+  // console.log('Destination: ', __dirname + '/uploads/' + newName);
   await imageDownloader.image({
     url: Link,
     dest: __dirname + '/uploads/' + newName,
@@ -115,7 +115,7 @@ app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
 // API for Uploading New Place Data
 app.post('/places', (req, res) => {
   const { token } = req.cookies;
-  const data = ({
+  const {
     title,
     address,
     addedPhotos,
@@ -125,7 +125,7 @@ app.post('/places', (req, res) => {
     checkIn,
     checkOut,
     maxGuests,
-  } = req.body);
+  } = req.body;
   jwt.verify(token, tokenSecret, {}, async (err, user) => {
     if (err) throw err;
     try {
@@ -144,6 +144,58 @@ app.post('/places', (req, res) => {
       res.json(placeData);
     } catch (err) {
       res.status(422).json(err);
+    }
+  });
+});
+
+//Sending the Place Data From Database to UI , on Get'/places' Call
+app.get('/places', (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, tokenSecret, {}, async (err, user) => {
+    const { id } = user;
+    res.json(await Place.find({ owner: id }));
+  });
+});
+
+//Sending the Place Data From Database to UI , on Get'/places/id' Call
+//This will fill the forms from the existing data on specific id
+app.get('/places/:id', async (req, res) => {
+  const { id } = req.params;
+  res.json(await Place.findById(id));
+});
+
+//Allow to Update the Place Data of id
+app.put('/places', async (req, res) => {
+  const { token } = req.cookies;
+  const {
+    id,
+    title,
+    address,
+    addedPhotos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body;
+  jwt.verify(token, tokenSecret, {}, async (err, user) => {
+    if(err) throw err;
+    const placeDoc = await Place.findById(id);
+    if (user.id === placeDoc.owner.toString()) {
+      placeDoc.set({
+        title,
+        address,
+        addedPhotos,
+        description,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuests,
+      });
+      placeDoc.save();
+      res.json('OK');
     }
   });
 });

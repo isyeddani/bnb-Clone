@@ -1,11 +1,12 @@
 import PhotosUploader from '../PhotosUploader';
 import Perks from '../Perks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import AccountNavigation from '../AccountNavigation';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 export default function PlaceFormPage() {
+  const { id } = useParams();
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [addedPhotos, setAddedPhotos] = useState([]);
@@ -17,6 +18,22 @@ export default function PlaceFormPage() {
   const [maxGuests, setMaxGuests] = useState(1);
   const [redirect, setRedirect] = useState(false);
 
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    axios.get(`/places/${id}`).then(({ data }) => {
+      setTitle(data.title);
+      setAddress(data.address);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setPerks(data.perks);
+      setExtraInfo(data.extraInfo);
+      setCheckIn(data.checkIn);
+      setCheckOut(data.checkOut);
+      setMaxGuests(data.maxGuests);
+    });
+  }, [id]);
   function InputHeader(text) {
     return <h2 className="text-xl mt-4">{text}</h2>;
   }
@@ -34,7 +51,7 @@ export default function PlaceFormPage() {
 
   async function submitNewPlace(ev) {
     ev.preventDefault();
-    await axios.post('/places', {
+    const PlaceData = {
       title,
       address,
       addedPhotos,
@@ -44,13 +61,24 @@ export default function PlaceFormPage() {
       checkIn,
       checkOut,
       maxGuests,
-    });
-    setRedirect(true)
+    };
+    // If Id is present then Updating
+    if (id) {
+      
+      await axios.put('/places', {
+        id,
+        ...PlaceData,
+      });
+      // if Id not found then creating new place
+    } else {
+      await axios.post('/places', PlaceData);
+    }
+    setRedirect(true);
   }
 
-if(redirect){
-  return <Navigate to={'/account/places'}/>
-}
+  if (redirect) {
+    return <Navigate to={'/account/places'} />;
+  }
 
   return (
     <div>
@@ -78,7 +106,7 @@ if(redirect){
         <PhotosUploader addedPhotos={addedPhotos} onChange={setAddedPhotos} />
         {preInput('Description', 'Description of the place')}
         <textarea
-          className="mt-2"
+          className="mt-2 px-2 py-1"
           value={description}
           onChange={(ev) => setDescription(ev.target.value)}
         />
