@@ -3,19 +3,21 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./models/User');
-const Place = require('./models/Place');
+const User = require('./models/User'); // Creating Routes to store Users Data inside /models/Users folder
+const Place = require('./models/Place'); // Creating Routes to store Places Data inside /models/Place folder
 const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs'); //Files system library
-require('dotenv').config();
+require('dotenv').config(); // This will load all our enviroment variables from .env
 
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 tokenSecret = 'fsdafhasdjkfsdfasdkjfkla';
 
-app.use(express.json());
+// The app.use() function adds a new middleware to the app. Essentially, whenever a request hits your backend, Express will execute the functions you passed to app.use()
+// Express.json() is a built in middleware function in Express starting from v4.16.0. It parses incoming JSON requests and puts the parsed data in req.body.
+app.use(express.json()); // Setup server to accept JSON
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
@@ -160,6 +162,7 @@ app.get('/user-places', (req, res) => {
 
 //Sending the Place Data From Database to UI , on Get'/places/id' Call
 //This will fill the forms from the existing data on specific id
+// This will also provide Place Data to PlaceDisplay Page. 
 app.get('/places/:id', async (req, res) => {
   const { id } = req.params;
   res.json(await Place.findById(id));
@@ -203,8 +206,8 @@ app.put('/places', async (req, res) => {
   });
 });
 
-app.get('/places', async (req, res)=>{
-  res.json(await Place.find())
-})
+app.get('/places', async (req, res) => {
+  res.json(await Place.find());
+});
 
 app.listen(4000);
