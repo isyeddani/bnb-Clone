@@ -26,9 +26,9 @@ export default function Header() {
         </Link>
         <div className="items-center h-12 px-3 flex flex-row border border-grey-300 rounded-full shadow-md shadow-grey-300">
           <div className="grid p-2">Anywhere</div>
-          <div className="rounded-full bg-gray-200 h-8 p-0.5"></div>
+          <div className="rounded-full bg-gray-200 h-8 w-0.5"></div>
           <div className="grid p-2">Anyweek</div>
-          <div className="rounded-full bg-gray-200 h-8 p-0.5"></div>
+          <div className="rounded-full bg-gray-200 h-8 w-0.5"></div>
           <div className="grid p-2">Add guests</div>
           <button className="items-center bg-primary rounded-full w-7 h-7">
             <img src={serachlogo} className="mx-auto"></img>
