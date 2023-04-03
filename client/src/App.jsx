@@ -9,6 +9,8 @@ import PlaceDisplay from './Pages/PlaceDisplay';
 import PlaceFormPage from './Pages/PlacesFormPage';
 import { UserContextProvider } from './UserContext';
 import axios from 'axios';
+import BookingsPage from './Pages/BookingsPage';
+import DisplayBooking from './Pages/DisplayBookingPage';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -26,6 +28,8 @@ function App() {
           <Route path="/account/places/new" element={<PlaceFormPage />} />
           <Route path="/account/places/:id" element={<PlaceFormPage />} />
           <Route path="/places/:id" element={<PlaceDisplay />} />
+          <Route path="/account/bookings" element={<BookingsPage />} />
+          <Route path="/account/bookings/:id" element={<DisplayBooking />} />
         </Route>
       </Routes>
     </UserContextProvider>

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { compareAsc, differenceInCalendarDays, format } from "date-fns";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 export default function BookingCard({ place }) {
   const [checkIn, setCheckIn] = useState("");
@@ -9,7 +10,15 @@ export default function BookingCard({ place }) {
   const [numberOfGuest, setNumberOfGuest] = useState(1);
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
-  const [redirect,setRedirect] = useState("");
+  const [redirect, setRedirect] = useState("");
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+    }
+  }, [user]);
+
   let numberOfNights = 0;
   // Calculate the Number of Nights between two dates.
   if (checkIn && checkOut) {
@@ -29,12 +38,12 @@ export default function BookingCard({ place }) {
       mobile,
       price: numberOfNights * place.price,
     });
-    const bookingid = response.data._id
+    const bookingid = response.data._id;
     setRedirect(`/account/bookings/${bookingid}`);
   }
 
-  if(redirect){
-    return <Navigate to={redirect} />
+  if (redirect) {
+    return <Navigate to={redirect} />;
   }
 
   return (
