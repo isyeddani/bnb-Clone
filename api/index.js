@@ -248,4 +248,6 @@ app.get('/bookings/data', async (req, res) => {
   res.json(await Booking.find({ user: userData.id }).populate('place'));
 });
 
-app.listen(4000);
+
+export default app;
+// app.listen(4000);
